@@ -1,0 +1,26 @@
+name: Scholarship Watcher
+
+on:
+  schedule:
+    - cron: "0 * * * *"  # 毎時0分に実行（UTC）
+  workflow_dispatch:      # 手動実行も可
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests beautifulsoup4
+
+      - name: Run checker
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: python check_scholarship.py
